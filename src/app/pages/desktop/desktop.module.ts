@@ -6,15 +6,11 @@ import { HttpClientModule } from '@angular/common/http';
 
 export const routes: Routes = [
   {
-    path: '',
-    children: [
-      {
-        path: 'taxonomi',
-        component: TaxonomiComponent,
-      }
-    ]
+    path: 'taxonomi',
+    component: TaxonomiComponent,
   }
 ];
+
 @NgModule({
   declarations: [
     TaxonomiComponent,

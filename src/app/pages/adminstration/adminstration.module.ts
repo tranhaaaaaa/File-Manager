@@ -6,18 +6,13 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: '',
-    children: [
-      {
-        path: 'home',
-        component: HomeComponent,
-      },
-      {
-        path: 'configuration',
-        component: ConfigurationComponent,
-      },
-    ]
-  }
+    path: 'home',
+    component: HomeComponent,
+  },
+  {
+    path: 'configuration',
+    component: ConfigurationComponent,
+  },
 ]
 
 @NgModule({
