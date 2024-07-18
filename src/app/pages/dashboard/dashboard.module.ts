@@ -6,18 +6,13 @@ import { MailComponent } from './mail/mail.component';
 
 const routes: Routes = [
   {
-    path: '',
-    children: [
-      {
-        path: 'user',
-        component: UserComponent,
-      },
-      {
-        path: 'mail',
-        component: MailComponent,
-      },
-    ]
-  }
+    path: 'user',
+    component: UserComponent,
+  },
+  {
+    path: 'mail',
+    component: MailComponent,
+  },
 ];
 
 @NgModule({
