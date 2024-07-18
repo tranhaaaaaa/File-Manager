@@ -1,0 +1,296 @@
+
+
+<div class="ps-md-4 pe-md-3 px-2 py-3 page-body" style="width: 130%;">
+
+    <div class="card">
+        <div style="min-height: 150px;max-height: 627px;  height: 400px;">
+            <div class="dropdown card-action">
+                
+            </div>
+            <div class="w-100 mt-4">
+                <ul class="row g-lg-4 g-2 list-unstyled li_animate mb-4 mb-lg-5">
+                    <li class="nav-item dropdown ms-auto">
+                        <a class="btn btn-primary fs-6" href="#" role="button" data-bs-toggle="dropdown" style="margin-left: 20px;"><i class="fa fa-plus-circle me-1"></i>Create</a>
+                        <ul class="li_animate dropdown-menu dropdown-menu-end shadow rounded-4 p-2">
+                            <li><a class="dropdown-item rounded-pill" href="#">New folder</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item rounded-pill" href="#">File upload</a></li>
+                            <li><a class="dropdown-item rounded-pill" href="#">Folder upload</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item rounded-pill" href="#">Create Invoice</a></li>
+                            <li><a class="dropdown-item rounded-pill" href="#">Create Project</a></li>
+                        </ul>
+                    </li>
+                    
+                </ul>
+                <ul>
+                    <li class="col-12 mt-5" style="height: 450px; overflow-y: auto;">
+                        <!-- <h5 class="mb-1">Recently Accessed Files</h5> -->
+                        <!-- <p class="text-muted small">Contrary to popular belief, Lorem Ipsum is not simply random text</p> -->
+                        <table class="table align-middle table-hover mb-0 dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="border-top-0"></th>
+                                    <th class="border-top-0">Name</th>
+                                    
+                                    <th class="border-top-0">Create At</th>
+                                    <th class="border-top-0">Create By</th>
+                                    <th class="border-top-0">Size</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            
+                                <tr (mouseup)="detectRightMouseClick($event)" *ngFor="let item of listBaseNode" (dblclick)="onChange(item)">
+                                    <td style="width: 50px;"><i class="fa fa-folder" *ngIf="item.Type == 1"></i>
+                                        <i class="fa fa-file-o" *ngIf="item.Type == 0"></i>
+                                    </td>
+                                    <td><span class="folder-name">{{item.Name}}</span></td>                                   
+                                    <td><span>{{item.CreatedAt | date }}</span></td>
+                                    <td><span>{{item.CreatedById}}</span></td>
+                                    <td><span class="size"> - </span></td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </li>
+                </ul>	
+            </div>
+        </div>
+            <div class="resize-handle" style="width: 100%; height: 10px; cursor: row-resize; background-color: #ccc;"></div>
+    
+                <ul class="nav nav-tabs tab-card li_animate px-1 mb-0" role="tablist" style="background-color: white;">
+                    <li class="nav-item btn-group me-xl-4 me-3 fs-6">
+                        <a class="nav-link active px-0" data-bs-toggle="tab" href="#drive-my">Properties</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link px-0 me-xl-4 me-3 fs-6" data-bs-toggle="tab" href="#note"><i ></i><span class="d-none d-md-inline-flex ps-1">Notes</span></a></li>
+                    <li class="nav-item"><a class="nav-link px-0 me-xl-4 me-3 fs-6" data-bs-toggle="tab" href="#drive-withme"><i ></i> <span class="d-none d-md-inline-flex ps-1">Security</span></a></li>
+                    <li class="nav-item"><a class="nav-link px-0 me-xl-4 me-3 fs-6" data-bs-toggle="tab" href="#drive-withme"><i ></i><span class="d-none d-sm-inline-flex ps-1">History</span></a></li>
+                    <li class="nav-item"><a class="nav-link px-0 me-xl-4 me-3 fs-6" data-bs-toggle="tab" href="#drive-withme"><i ></i><span class="d-none d-sm-inline-flex ps-1">Preview</span></a></li>
+                   
+                </ul>
+                <!-- properties -->
+                <div style="background-color: white;">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="drive-my" role="tabpanel" tabindex="0">
+                            <ul id="ul-height" class="row g-3 list-unstyled li_animate" style="height: 400px; min-height: 400px; margin-left: 17px; margin-top:15px; overflow-y: auto;">
+                                <li class="col-12">
+                                    <div class="file_folder d-flex flex-wrap text-center" style="margin-left: 1px;">
+                                        <h6 class="mb-0">UUID</h6>
+                                    </div>
+                                </li>
+                                <li class="col-12">
+                                    <div class="file_folder d-flex flex-wrap text-center" style="margin-left: 1px;">
+                                        <h6 class="mb-0">Name</h6>
+                                    </div>
+                                </li>
+                                <li class="col-12">
+                                    <div class="file_folder d-flex flex-wrap text-center" style="margin-left: 1px;">
+                                        <h6 class="mb-0">Folder</h6>
+                                    </div>
+                                </li>
+                                <li class="col-12">
+                                    <div class="file_folder d-flex flex-wrap text-center" style="margin-left: 1px;">
+                                        <h6 class="mb-0">Size</h6>
+                                    </div>
+                                </li>
+                                <li class="col-12">
+                                    <div class="file_folder d-flex flex-wrap text-center" style="margin-left: 1px;">
+                                        <h6 class="mb-0">Created</h6>
+                                    </div>
+                                </li>
+                                <li class="col-12">
+                                    <div class="file_folder d-flex flex-wrap text-center" style="margin-left: 1px;">
+                                        <h6 class="mb-0">Modified</h6>
+                                    </div>
+                                </li>
+                                <li class="col-12">
+                                    <div class="file_folder d-flex flex-wrap text-center" style="margin-left: 1px;">
+                                        <h6 class="mb-0">MIME type</h6>
+                                    </div>
+                                </li>
+                                <li class="col-12">
+                                    <div class="file_folder d-flex flex-wrap text-center" style="margin-left: 1px;">
+                                        <h6 class="mb-0">Keywords</h6>
+                                    </div>
+                                </li>
+                                <li class="col-12">
+                                    <div class="file_folder d-flex flex-wrap text-center" style="margin-left: 1px;">
+                                        <h6 class="mb-0">Status</h6>
+                                    </div>
+                                </li>
+                                <li class="col-12">
+                                    <div class="file_folder d-flex flex-wrap text-center" style="margin-left: 1px;">
+                                        <h6 class="mb-0">Subscribed</h6>
+                                    </div>
+                                </li>
+                                <li class="col-12">
+                                    <div class="file_folder d-flex flex-wrap text-center" style="margin-left: 1px;">
+                                        <h6 class="mb-0">History size</h6>
+                                    </div>
+                                </li>
+                                <li class="col-12">
+                                    <div class="file_folder d-flex flex-wrap text-center" style="margin-left: 1px;">
+                                        <h6 class="mb-0">URL</h6>
+                                    </div>
+                                </li>
+                                <li class="col-12">
+                                    <div class="file_folder d-flex flex-wrap text-center" style="margin-left: 1px;">
+                                        <h6 class="mb-0">WebDAV</h6>
+                                    </div>
+                                </li>
+                                <li class="col-12">
+                                    <div class="file_folder d-flex flex-wrap text-center" style="margin-left: 1px;">
+                                        <h6 class="mb-0">Subscribed users</h6>
+                                    </div>
+                                </li>
+                                <li class="col-12">
+                                    <div class="file_folder d-flex flex-wrap text-center" style="margin-left: 1px;">
+                                        <h6 class="mb-0">Keywords cloud</h6>
+                                    </div>
+                                </li>
+                                <li class="col-12">
+                                    <div class="file_folder d-flex flex-wrap text-center" style="margin-left: 1px;">
+                                        <h6 class="mb-0">Categories</h6>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" id="note" role="tabpanel" tabindex="0">
+                            <ul id="ul-height" class="row g-3 list-unstyled li_animate" style="height: 400px; min-height: 400px; margin-left: 17px; margin-top: 15px; overflow-y: auto;">
+                                <li style="list-style-type: none;">
+                                    <textarea class="form-control" style="display: block; width: 50%; height: 200px; margin-left: 288px; box-sizing: border-box;"></textarea>
+                                </li>
+                                <li style="list-style-type: none; text-align: center">
+                                    <button class="btn btn-primary"><i class="fa fa-plus-circle me-1"></i>Add</button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" id="drive-starred" role="tabpanel" tabindex="0">
+                            <div class="card">
+                                <div class="card-body text-center p-5">  
+                                    <div class="mt-4 mb-3">
+                                        <span class="text-muted">No data to show</span>
+                                    </div>
+                                    <button type="button" class="btn btn-white border">Get Started</button>
+                                    <button type="button" class="btn btn-primary border">Back to Home</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="drive-withme" role="tabpanel" tabindex="0">
+                            <div class="card"  style="height: 400px; min-height: 400px; margin-left: 17px; margin-top:15px; overflow-y: auto;">
+                                <div class="card-body text-center p-5">  
+                                    <div class="mt-4 mb-3">
+                                        <span class="text-muted">No data to show</span>
+                                    </div>
+                                    <button type="button" class="btn btn-white border">Get Started</button>
+                                    <button type="button" class="btn btn-primary border">Back to Home</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="drive-trash" role="tabpanel" tabindex="0">
+                            <div class="file_folder d-flex flex-wrap text-center">
+                                <a class="card card-border p-4 m-1" href="javascript:void(0);" style="--dynamic-color: var(--theme-color1);">
+                                    <i class="fa fa-folder fa-2x mb-2 theme-text-color1"></i>
+                                    <h6>Analytics</h6>
+                                    <div class="card-footer pb-0 pt-2">
+                                        <small>215 File, 50MB</small>
+                                    </div>
+                                </a>
+                                <a class="card card-border p-4 m-1" href="javascript:void(0);" style="--dynamic-color: var(--theme-color2);">
+                                    <i class="fa fa-folder fa-2x mb-2 theme-text-color2"></i>
+                                    <h6>Assets</h6>
+                                    <div class="card-footer pb-0 pt-2">
+                                        <small>215 File, 50MB</small>
+                                    </div>
+                                </a>
+                                <a class="card card-border p-4 m-1" href="javascript:void(0);" style="--dynamic-color: var(--theme-color3);">
+                                    <i class="fa fa-folder fa-2x mb-2 theme-text-color3"></i>
+                                    <h6>Marketing</h6>
+                                    <div class="card-footer pb-0 pt-2">
+                                        <small>215 File, 50MB</small>
+                                    </div>
+                                </a>
+                                <a class="card card-border p-4 m-1" href="javascript:void(0);" style="--dynamic-color: var(--theme-color4);">
+                                    <i class="fa fa-folder fa-2x mb-2 theme-text-color4"></i>
+                                    <h6>New App Design</h6>
+                                    <div class="card-footer pb-0 pt-2">
+                                        <small>215 File, 50MB</small>
+                                    </div>
+                                </a>
+                            </div>
+                            <p class="small text-danger mt-3">Items in trash are deleted forever after 30 days</p>
+                        </div>
+                    </div>
+                </div>          
+    </div>
+    
+</div>
+
+<div id="contextmenu" class="contextmenu wrapper" [ngStyle]="rightPanelStyle" (clickOutSide)="closeContextMenu()" (mouseleave)="closeContextMenu()" style="background-color: white; border-color: bisque;">
+    <ul class="menu">
+        <li><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa fa-folder"></i> Create folder</button></li>
+        <li><button class="btn btn-primary"><i class="fa fa-trash"></i> Delete</button></li>
+        <li><button class="btn btn-primary"><i class="fa fa-edit"></i> Rename</button></li>
+        <li><button class="btn btn-primary"><i class="fa fa-arrows-alt"></i> Move</button></li>
+        <li><button class="btn btn-primary"><i class="fa fa-copy"></i> Copy</button></li>
+        <li><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#adddocument"><i class="fa fa-file"></i> Add document</button></li>
+        <li><button class="btn btn-primary"><i class="fa fa-bookmark"></i> Add bookmark</button></li>
+        <li><button class="btn btn-primary"><i class="fa fa-home"></i> Set default home</button></li>
+        <li><button class="btn btn-primary"><i class="fa fa-file-zip-o"></i> Export to zip</button></li>
+    </ul>
+
+</div>
+
+<div class="card-footer">
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" >Create Folder</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <label style="margin-left: 17px; font-size: 16px;">Folder Name</label>
+            <div class="modal-body">
+                
+                <input type="text" class="form-control" id="TodoInput">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="card-footer">
+    <div class="modal fade" id="adddocument" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="adddocumentLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" >Add new document </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                
+                <input type="file" (change)="fileChange(input)"  #input class="form-control" id="TodoInput">
+                <div class="checkbox-container" style="margin-top: 10px;">
+                    <input type="checkbox" class="form-check-input" id="importDocuments">
+                    <label for="importDocuments">Import Documents from zip</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="form-check-input" id="notifyUsers">
+                    <label for="notifyUsers">Notify to users</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="upload()">Upload</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+</div>

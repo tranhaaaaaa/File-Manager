@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<meta charset="UTF-8">
+<title>Upload Page with Spinner</title>
+<link rel="stylesheet" href="/styles.css">
+<style>
+    /* Spinner Styles */
+    .spinner {
+        border: 16px solid #f3f3f3; /* Light grey */
+        border-top: 16px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        animation: spin 2s linear infinite;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+</head>
+<body>
+Add a video here:
+Quan ly du lieu<input type="radio" name="rdoApp" value="1" checked="checked"/>
+Quy trinh san xuat phim<input type="radio" name="rdoApp" value="2"/>
+<div id="fileDiv"></div>
+<br>
+<input type="button" id="AddFile" value="Add file"/>
+<input type="button" id="UploadButton" value="Upload"/>
+<br><br><br>
+<input type="button" id="TriggerButton" value="Trigger click file"/>
+
+<!-- Spinner -->
+<div id="spinner" class="spinner" style="display: none;"></div>
+
+<a href="#" class="ng2-smart-action ng2-smart-action-edit-edit ng-star-inserted"><i class="fa-solid fs-3 me-2 fa-pen-to-square"></i></a>
+<a href="#" class="ng2-smart-action ng2-smart-action-edit-edit ng-star-inserted"><i class="fa-solid fs-3 me-2 fa-pen-to-square"></i></a>
+<a href="#" class="ng2-smart-action ng2-smart-action-edit-edit ng-star-inserted"><i class="fa-solid fs-3 me-2 fa-pen-to-square"></i></a>
+<script src="script.js"></script>
+</body>
+</html>
+<script>
+    class UploadObject {
+    constructor(fileId, fileInfoId, chunkInfoId, titleId, desId) {
+        this.baseNodeId = "";
+        this.DocNodeId = "";
+        this.DocNodeVersionId = "";
+        this.fileId = fileId;
+        this.fileInfoId = fileInfoId;
+        this.chunkInfoId = chunkInfoId;
+        this.videoId = "";
+        this.fileuploadpath = "";
+        this.playerUrl = "";
+        this.file = null;
+        this.filename = '';
+        this.numberofChunks = 0;
+        this.start = 0;
+        this.chunkEnd = 0;
+        this.chunkSize = 0;
+        this.chunkCounter = 0;
+        this.hasFile = false;
+        this.titleId = titleId;
+        this.desId = desId;
+        this.createdById = "a726cba0-e9ac-44d3-89ad-6a36d5fd5be8";
+        this.folderid = "163c8f34-1654-4078-b62d-d6681a193555";
+    }
+
+    StartUpload() {
+        this.chunkSize = 104857600;
+        this.file = document.getElementById(this.fileId).files[0];
+        this.filename = this.file.name;
+        this.numberofChunks = Math.ceil(this.file.size / this.chunkSize);
+        document.getElementById(this.fileInfoId).innerHTML = "There will be " + this.numberofChunks + " chunks uploaded.";
+        this.start = 0;
+        this.chunkEnd = this.start + this.chunkSize;
+
+        var self = this;
+        // Hiển thị spinner khi bắt đầu tải lên
+        $("#spinner").show();
+
+        $.ajax({
+            type: "GET",
+            url: baseurl + "Upload/StartUpload?fileName=" + this.filename + "&fileSize=" + this.file.size + "&folderId=" + this.folderid + "&createdById=" + this.createdById + "&title=" + this.title + "&des=" + this.des,
+            async: false,
+            success: function (data) {
+                self.baseNodeId = data.BaseNodeId;
+                self.docNodeId = data.DocNodeId;
+                self.docNodeVersionId = data.DocNodeVersionId;
+                self.createChunk(self.docNodeVersionId, self.start);
+            }
+        });
+    }
+
+    createChunk(docNodeVersionId, start) {
+        this.chunkCounter++;
+        this.chunkEnd = Math.min(this.start + this.chunkSize, this.file.size);
+        const chunk = this.file.slice(this.start, this.chunkEnd);
+        const chunkForm = new FormData();
+        if (this.docNodeVersionId.length > 0) {
+            chunkForm.append('id', this.docNodeVersionId);
+            chunkForm.append('folderId', this.folderid);
+        }
+        chunkForm.append('file', chunk, this.filename);
+
+        this.uploadChunk(chunkForm, start, this.chunkEnd);
+    }
+
+    uploadChunk(chunkForm, start, chunkEnd) {
+        var oReq = new XMLHttpRequest();
+        oReq.timeout = 300000;
+        var self = this;
+        oReq.upload.onprogress = function (oEvent) {
+            if (oEvent.lengthComputable) {
+                var percentComplete = Math.round(oEvent.loaded / oEvent.total * 100);
+                var totalPercentComplete = Math.round((self.chunkCounter - 1) / self.numberofChunks * 100 + percentComplete / self.numberofChunks);
+                document.getElementById(self.chunkInfoId).innerHTML = "Chunk # " + self.chunkCounter + " is " + percentComplete + "% uploaded. Total uploaded: " + totalPercentComplete + "%";
+            } else {
+                console.log("not computable");
+            }
+        }
+
+        oReq.open("POST", baseurl + "Upload/UploadPart", true);
+        var blobEnd = chunkEnd - 1;
+        var contentRange = "bytes " + start + "-" + blobEnd + "/" + this.file.size;
+        oReq.setRequestHeader("Content-Range", contentRange);
+        var selft = this;
+        oReq.onload = function (oEvent) {
+            var resp = JSON.parse(oReq.response);
+            selft.videoId = resp.Id;
+            selft.fileuploadpath = resp.path;
+            selft.start += selft.chunkSize;
+            if (selft.start < selft.file.size) {
+                selft.createChunk(selft.videoId, selft.start);
+            } else {
+                $.ajax({
+                    type: "GET",
+                    url: baseurl + "Upload/FinishUpload?baseNodeId=" + self.baseNodeId + "&docNodeId=" + self.docNodeId + "&docNodeVersionId=" + self.docNodeVersionId + "&folderId=" + self.folderid + "&fileName=" + selft.filename,
+                    success: function (data) {
+                        document.getElementById(self.fileInfoId).innerHTML = "all uploaded! Watch the video <a href=\'" + self.playerUrl + "\' target=\'_blank\'>here</a>";
+                    },
+                    complete: function () {
+                        // Ẩn spinner khi hoàn thành quá trình tải lên
+                        $("#spinner").hide();
+                    }
+                });
+
+                self.videoId = "";
+                self.playerUrl = "";
+                self.file = null;
+                self.filename = '';
+                self.numberofChunks = 0;
+                self.start = 0;
+                self.chunkEnd = 0;
+                document.getElementById(self.fileInfoId).innerHTML = "all uploaded! Watch the video <a href=\'" + self.playerUrl + "\' target=\'_blank\'>here</a>";
+            }
+        };
+        oReq.send(chunkForm);
+    }
+}
+
+const baseurl = "http://192.168.118.159:31499/";
+
+$("#AddFile").click(function () {
+    NumberOfFiles++;
+    var str = "<div id='div_block_" + NumberOfFiles + "'>" +
+        "<br>" +
+        "<input type='file' id='video-url-example" + NumberOfFiles + "' ><br>" +
+        "Title <textarea id='txtareaTitle" + NumberOfFiles + "' ></textarea> <br>" +
+        "Description <textarea rows='4' id='txtareaDes" + NumberOfFiles + "' ></textarea><br>" +
+        "<input type='button' class='remove-button' value='remove' onclick='Remove(" + NumberOfFiles + ")' />" +
+        "<br>" +
+        "<div id='video-information" + NumberOfFiles + "' style='width: 50%'></div>" +
+        "<div id='chunk-information" + NumberOfFiles + "' style='width: 50%'></div></div>";
+    $("#fileDiv").append(str);
+    const input2 = document.querySelector('#video-url-example' + NumberOfFiles);
+    var classInstance3 = new UploadObject('video-url-example' + NumberOfFiles, 'video-information' + NumberOfFiles, 'chunk-information' + NumberOfFiles, 'txtareaTitle' + NumberOfFiles, 'txtareaDes' + NumberOfFiles);
+    arrUploads.push(classInstance3);
+});
+
+arrUploads = [];
+var NumberOfFiles = 0;
+
+function Remove(index) {
+    $('#div_block_' + index).remove();
+}
+
+$("#TriggerButton").click(function () {
+    var allRemoveButtons = $(".remove-button");
+    for (var i = 0; i < allRemoveButtons.length; i++) {
+        var element = allRemoveButtons.eq(i);
+        element.trigger("click");
+    }
+});
+
+$("#UploadButton").click(function () {
+    $("#spinner").show(); // Hiển thị spinner khi bắt đầu tải lên
+    arrUploads.forEach(function (item) {
+        item.StartUpload();
+    });
+});
+
+</script>
